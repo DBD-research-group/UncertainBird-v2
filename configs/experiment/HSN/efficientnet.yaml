@@ -9,18 +9,19 @@ defaults:
   - override /datamodule/transforms: bird_default_multilabel.yaml
   - override /paths: default.yaml
   - override /hydra: default.yaml
+  #- override /datamodule/transforms/waveform_augmentations: none.yaml
+  #- override /datamodule/transforms/spectrogram_augmentations: none.yaml
 
 tags: ["HSN", "efficientnet", "multilabel"]
 seed: 2
 train: True
-test: True
+test: False
 
-# logger:
-#   wandb:
-#     tags: ${tags}
-#     group: "HSN_train_efficientnet"
-#     mode: online
-    #version: pretraineatxcm_2 #to resume train run # needs to be tested
+logger:
+  wandb:
+    tags: ${tags}
+    group: "XCM_train_efficientnet"
+    mode: online
 
 module:
   optimizer:
@@ -31,8 +32,8 @@ module:
   #  _target_: src.modules.losses.asymmetric_loss.AsymmetricLossMultiLabel
     _target_: torch.nn.BCEWithLogitsLoss 
   #_target_: src.modules.losses.focal_loss.MultiLabelFocalLoss
-  network:
-    torch_compile: False
+  network: 
+    torch_compile: True
 
 trainer:
   min_epochs: 1
@@ -40,26 +41,25 @@ trainer:
 
 datamodule:
   dataset:
-    val_split: 0.1
+    val_split: 0.2
     class_weights_loss: null
     class_weights_sampler: null
     classlimit: 600
-    eventlimit: 4
-
+    eventlimit: 3
+    
   loaders:
     train:
-      batch_size: 32
+      batch_size: 64
       shuffle: True
-      num_workers: 16
+      num_workers: 32
       drop_last: True
-      pin_memory: True
     valid:
-      batch_size: 32
-      num_workers: 16
+      batch_size: 64
+      num_workers: 32
       shuffle: False
     test:
-      batch_size: 32
-      num_workers: 16
+      batch_size: 64
+      num_workers: 32
       shuffle: False
 
   mapper: 
