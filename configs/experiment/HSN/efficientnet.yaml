@@ -9,8 +9,6 @@ defaults:
   - override /datamodule/transforms: bird_default_multilabel.yaml
   - override /paths: default.yaml
   - override /hydra: default.yaml
-  - override /datamodule/transforms/spectrogram_augmentations: none.yaml
-  - override /datamodule/transforms/waveform_augmentations: none.yaml
 
 tags: ["HSN", "efficientnet", "multilabel"]
 seed: 2
@@ -50,18 +48,18 @@ datamodule:
 
   loaders:
     train:
-      batch_size: 48
+      batch_size: 32
       shuffle: True
-      num_workers: 18
+      num_workers: 16
       drop_last: True
       pin_memory: True
     valid:
-      batch_size: 48
-      num_workers: 18
+      batch_size: 32
+      num_workers: 16
       shuffle: False
     test:
-      batch_size: 48
-      num_workers: 18
+      batch_size: 32
+      num_workers: 16
       shuffle: False
 
   mapper: 
