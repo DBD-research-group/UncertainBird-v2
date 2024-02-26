@@ -15,12 +15,12 @@ defaults:
 tags: ["HSN", "efficientnet", "multilabel"]
 seed: 2
 train: True
-test: False
+test: True
 
 logger:
   wandb:
     tags: ${tags}
-    group: "XCM_train_efficientnet"
+    group: "HSN_train_efficientnet"
     mode: online
 
 module:
