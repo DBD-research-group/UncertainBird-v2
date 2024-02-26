@@ -10,7 +10,7 @@ defaults:
   - override /paths: cluster.yaml
   - override /hydra: cluster.yaml
 
-tags: ["pretrain_xencanto_m", "eat", "multilabel", "5event"]
+tags: ["pretrain_xencanto_m", "ast", "multilabel", "5event"]
 seed: 2
 train: True
 test: False
@@ -33,7 +33,7 @@ module:
 
 trainer:
   min_epochs: 1
-  max_epochs: 12
+  max_epochs: 8
 
 datamodule:
   dataset:
@@ -42,9 +42,7 @@ datamodule:
     class_weights_sampler: null
     classlimit: 600
     eventlimit: 3
-  transforms:
-    preprocessing:
-      normalize_waveform: instance_normalization
+
 
   loaders:
     train:
@@ -52,14 +50,21 @@ datamodule:
       shuffle: True
       num_workers: 16
       drop_last: True
-      #prefetch_factor: 4
+      prefetch_factor: 2
+      pin_memory: True
+
     valid:
-      batch_size: 18
+      batch_size: 20
+      num_workers: 16
+      shuffle: False
+    
+    test:
+      batch_size: 20
       num_workers: 16
       shuffle: False
 
   mapper: 
-    event_limit: null
+   
     biggest_cluster: True
     no_call: False
   

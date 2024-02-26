@@ -1,0 +1,74 @@
+# @package _global_
+#package global is neccessary!
+defaults:
+  - override /datamodule: XCM.yaml
+  - override /module: multilabel.yaml
+  - override /module/network: efficientnet.yaml
+  - override /callbacks: cluster.yaml
+  - override /trainer: single_gpu.yaml
+  - override /datamodule/transforms: bird_default_multilabel.yaml
+  - override /paths: cluster.yaml
+  - override /hydra: cluster.yaml
+
+tags: ["HSN", "efficientnet", "multilabel"]
+seed: 2
+train: True
+test: False
+
+logger:
+  wandb:
+    tags: ${tags}
+    group: "XCM_train_efficientnet"
+    mode: online
+    version: pretrain_effnet_${start_time}
+    #version: pretraineatxcm_2 #to resume train run # needs to be tested
+
+module:
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 5e-4
+    weight_decay: 5e-4
+  loss:
+  #  _target_: src.modules.losses.asymmetric_loss.AsymmetricLossMultiLabel
+    _target_: torch.nn.BCEWithLogitsLoss 
+  #_target_: src.modules.losses.focal_loss.MultiLabelFocalLoss
+
+
+trainer:
+  min_epochs: 1
+  max_epochs: 100
+
+datamodule:
+  dataset:
+    val_split: 0.1
+    class_weights_loss: null
+    class_weights_sampler: null
+    classlimit: 600
+    eventlimit: 3
+
+  loaders:
+    train:
+      batch_size: 128
+      shuffle: True
+      num_workers: 28
+      drop_last: True
+      pin_memory: True
+    valid:
+      batch_size: 128
+      num_workers: 28
+      shuffle: False
+    test:
+      batch_size: 128
+      num_workers: 28
+      shuffle: False
+
+  mapper: 
+   
+    biggest_cluster: True
+    no_call: False
+  
+callbacks:
+  model_checkpoint:
+    save_last: True
+    every_n_epochs: 3
+

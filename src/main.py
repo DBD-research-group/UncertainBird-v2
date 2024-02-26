@@ -96,10 +96,8 @@ def main(cfg):
             model=model, 
             datamodule=datamodule,
             ckpt_path=cfg.get("ckpt_path"))
-        #!TODO: check
-        #model.model.model.save_pretrained(f"last_ckpt_hf") #triple model check
     
-        train_metrics = trainer.callback_metrics
+    train_metrics = trainer.callback_metrics
 
     if cfg.get("test"):
         log.info(f"Starting testing")
@@ -117,7 +115,7 @@ def main(cfg):
             )
         trainer.test(model=model, datamodule=datamodule, ckpt_path=ckpt_path)
 
-        test_metrics = trainer.callback_metrics 
+    test_metrics = trainer.callback_metrics 
 
     if cfg.get("save_state_dict"):
         log.info(f"Saving state dicts")
