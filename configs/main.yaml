@@ -10,7 +10,7 @@ defaults:
   - hydra: default
   - extras: default
 
-  - experiment: HSN/efficientnet
+  - experiment: HSN/w2v2_HSN_multilabel
   - hparams_search: null
   - debug: null
 

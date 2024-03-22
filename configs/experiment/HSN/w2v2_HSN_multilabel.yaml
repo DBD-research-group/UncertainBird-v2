@@ -3,31 +3,26 @@
 defaults:
   - override /datamodule: HSN.yaml
   - override /module: multilabel.yaml
-  # - override /module/network: efficientnet.yaml
-  - override /callbacks: default.yaml
+  - override /module/network: wav2vec2.yaml
+  - override /callbacks: default.yaml 
   - override /trainer: single_gpu.yaml
+  
   - override /datamodule/transforms: bird_default_multilabel.yaml
   - override /paths: default.yaml
   - override /hydra: default.yaml
-# - override /datamodule/transforms/spectrogram_augmentations: none.yaml
-# - override /datamodule/transforms/waveform_augmentations: none.yaml
 
-tags: ["HSN", "ast", "multilabel"]
+
+
+tags: ["hsn", "w2v2", "multilabel"]
 seed: 2
+#ckpt_path: /mnt/work/bird2vec/logs_mw/checkpoints/XCM/Wav2vec2/Wav2vec2_XCM_30_0.005.ckpt
 train: True
 test: True
-
-logger:
-  wandb:
-    tags: ${tags}
-    group: "HSN_train_ast"
-    mode: online
-    #version: pretraineatxcm_2 #to resume train run # needs to be tested
 
 module:
   optimizer:
     _target_: torch.optim.AdamW
-    lr: 1.0e-05
+    lr: 3.0e-05
     # lr: 5e-4
     weight_decay: 0.01
     # weight_decay: 5e-4
@@ -40,7 +35,7 @@ module:
 
 trainer:
   min_epochs: 1
-  max_epochs: 15
+  max_epochs: 30
 
 datamodule:
   dataset:
@@ -70,9 +65,29 @@ datamodule:
   mapper: 
     biggest_cluster: True
     no_call: False
-  
+
 callbacks:
   model_checkpoint:
     save_last: True
     every_n_epochs: 3
+
+logger:
+  wandb:
+    tags: ${tags}
+    group: "hsn_w2v2_multilabel"
+    mode: online
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
 

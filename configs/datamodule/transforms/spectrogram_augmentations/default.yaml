@@ -1,3 +1,4 @@
+# spectrogramm augmentations
 defaults:
   - frequency_masking.yaml
   - time_masking.yaml

@@ -41,7 +41,7 @@ class Wav2vec2SequenceClassifier(nn.Module):
             output_attentions=False,
             output_hidden_states=True,
             return_dict=True,
-            labels=labels
+            # labels=labels
         )
 
         logits = outputs["logits"]

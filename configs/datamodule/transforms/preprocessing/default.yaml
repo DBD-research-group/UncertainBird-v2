@@ -1,10 +1,16 @@
-defaults:
-  - spectrogram_conversion.yaml
-  - melscale_conversion.yaml
-  - dbscale_conversion.yaml
-  - resizer.yaml
+#defaults:
+# - spectrogram_conversion.yaml
+# - melscale_conversion.yaml
+# - dbscale_conversion.yaml
+# - resizer.yaml
   
 normalize_waveform: ${module.network.normalize_waveform}
 normalize_spectrogram: ${module.network.normalize_spectrogram}
-mean: -4.268
-std: 4.569
+#mean: -4.268
+#std: 4.569
+
+defaults: []
+#normalize_waveform: ${module.network.normalize_waveform}
+#normalize_spectrogram: ${module.network.normalize_spectrogram}
+mean: null
+std: null

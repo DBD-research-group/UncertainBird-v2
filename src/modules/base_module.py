@@ -62,7 +62,7 @@ class BaseModule(L.LightningModule):
         self.torch_compile = network.torch_compile
         self.model_name = network.model_name
 
-        self.save_hyperparameters()
+        # self.save_hyperparameters()
 
         self.test_targets = []
         self.test_preds = []
