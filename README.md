@@ -1,10 +1,13 @@
-# BirdSet Benchmark
+# BirdSet 
 
-## Results
-| <sub>Title</sub> | <sub>Notes</sub> |<sub>PER</sub> | <sub>NES</sub> | <sub>UHH</sub> | <sub>HSN</sub> | <sub>NBP</sub> | <sub>POW</sub> | <sub>SSW</sub> | <sub>SNE</sub>  | <sub>Overall</sub> | <sub>Code</sub> |
-| :----| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| <sub>**BirdSet: A Multi-Task Benchmark For Classification In Avian Bioacoustics**</sub> | | | | | | | |
-| <sub>**BIRB: A Generalization Benchmark for Information Retrieval in Bioacoustics**</sub> | | | | | | | | 
+
+[![python](https://img.shields.io/badge/-Python_3.10-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
+<a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>
+<a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
+<a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
+<a href="https://github.com/DBD-research-group/BirdSet"><img alt="GitHub: github.com/DBD-research-group/BirdSet " src="https://img.shields.io/badge/-BirdSet-017F2F?style=flat&logo=github&labelColor=gray"></a>
+[![arXiv](https://img.shields.io/badge/arXiv-1234.56789-b31b1b.svg)](https://arxiv.org/abs/2403.10380)
+
 
 ## Get Started
 
@@ -33,7 +36,7 @@ poetry shell
 
 # Minimal Working Example
 
-## Log in to Huggingface
+<!-- ## Log in to Huggingface
 
 Our datasets are shared via HuggingFace Datasets in our [HuggingFace BirdSet repository](https://huggingface.co/datasets/DBD-research-group/birdset_v1). Huggingface is a central hub for sharing and utilizing datasets and models, particularly beneficial for machine learning and data science projects. For accessing private datasets hosted on HuggingFace, you need to be authenticated. Here's how you can log in to HuggingFace:
 
@@ -49,8 +52,8 @@ Our datasets are shared via HuggingFace Datasets in our [HuggingFace BirdSet rep
    huggingface-cli login
    ```
 
-   After executing this command, you'll be prompted to enter your HuggingFace credentials ([User Access Token](https://huggingface.co/docs/hub/security-tokens)). Once authenticated, your credentials will be saved locally, allowing seamless access to HuggingFace resources.
-   
+   After executing this command, you'll be prompted to enter your HuggingFace credentials ([User Access Token](https://huggingface.co/docs/hub/security-tokens)). Once authenticated, your credentials will be saved locally, allowing seamless access to HuggingFace resources. -->
+[Tutorial Notebook](https://github.com/DBD-research-group/BirdSet/blob/main/notebooks/tutorials/birdset-pipeline_tutorial.ipynb)
 ## Prepare Data
 
 ```
@@ -60,7 +63,7 @@ from birdset.datamodule.birdset_datamodule import BirdSetDataModule
 # initiate the data module
 dm = BirdSetDataModule(
     dataset= DatasetConfig(
-        data_dir='../../data_birdset/HSN',
+        data_dir='data_birdset/HSN', # specify your data directory!
         dataset_name='HSN',
         hf_path='DBD-research-group/BirdSet',
         hf_name='HSN',
@@ -102,6 +105,11 @@ model = BaseModule(
 trainer.fit(model, dm)
 ```
 
+## Results (AUROC)
+| <sub>Title</sub> | <sub>Notes</sub> |<sub>PER</sub> | <sub>NES</sub> | <sub>UHH</sub> | <sub>HSN</sub> | <sub>NBP</sub> | <sub>POW</sub> | <sub>SSW</sub> | <sub>SNE</sub>  | <sub>Overall</sub> | <sub>Code</sub> |
+| :----| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| <sub>**BirdSet: A Multi-Task Benchmark For Classification In Avian Bioacoustics**</sub> | | | | | | | |
+| <sub>**BIRB: A Generalization Benchmark for Information Retrieval in Bioacoustics**</sub> | |0.70 |0.90 |0.75 |0.86 | |0.83 |  0.62 | 0.69 | | |
 ## Logging
 Logs will be written to [Weights&Biases](https://wandb.ai/) by default.
 
@@ -110,12 +118,16 @@ To enhance model performance we mix in additional background noise from download
 
 ## Run experiments
 
-Our experiments are defined in the `configs/experiment` folder. To run an experiment, use the following command:
+Our experiments are defined in the `configs/experiment` folder. To run an experiment, use the following command in the directory of the repository:
 
+``` bash
+python src/main.py experiment="EXPERIMENT_PATH"
 ```
-python birdset/main.py experiment=EXPERIMENT_NAME
-```
+Replace `EXPERIMENT_PATH` with the path to the disired experiment YAML config originating from the `experiment` directory. For example, here's a command for training an EfficientNet on HSN: 
 
+``` bash
+python src/main.py experiment="local/HSN/efficientnet.yaml"
+```
 
 
 ## Project structure
