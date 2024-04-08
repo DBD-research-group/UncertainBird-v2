@@ -33,7 +33,7 @@ class ResNetClassifier(nn.Module):
             num_classes: int,
             num_channels: int = 1,
             pretrained: bool = False,
-            dropout_rate: float = 0):
+            dropout_rate: float = 0.2):
         """
         Constructs all the necessary attributes for the ResNetClassifier object.
 
@@ -92,7 +92,8 @@ class ResNetClassifier(nn.Module):
         resnet_model.bn1 = nn.BatchNorm2d(64)
 
         print(resnet_model)
-        append_dropout(resnet_model, rate=dropout_rate)
+        if dropout_rate > 0:
+            append_dropout(resnet_model, rate=dropout_rate)
         self.model = resnet_model
         print(self.model)
     
@@ -127,7 +128,7 @@ class ResNetClassifier(nn.Module):
         pass
     
 
-def append_dropout(model, rate=0.2):
+def append_dropout(model, rate=0.1):
         for name, module in model.named_children():
             if len(list(module.children())) > 0:
                 append_dropout(module, rate)
