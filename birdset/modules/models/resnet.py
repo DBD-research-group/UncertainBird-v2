@@ -102,7 +102,7 @@ class ResNetClassifier(nn.Module):
         Performs a forward pass through the network.
 
         Parameters
-        ----------
+        -------
         input_values : torch.Tensor
             The input tensor to the network.
         kwargs : dict, optional

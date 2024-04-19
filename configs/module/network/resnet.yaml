@@ -3,7 +3,7 @@ model:
   baseline_architecture: 'resnet18'
   num_classes: ${datamodule.dataset.n_classes}
   num_channels: 1
-  pretrained: True
+  pretrained: False
   dropout_rate: 0.2
 
 model_name: resnet18
