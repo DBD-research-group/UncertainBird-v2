@@ -32,8 +32,7 @@ class ResNetClassifier(nn.Module):
             baseline_architecture: ResNetVersion,
             num_classes: int,
             num_channels: int = 1,
-            pretrained: bool = False,
-            dropout_rate: float = 0):
+            pretrained: bool = False):
         """
         Constructs all the necessary attributes for the ResNetClassifier object.
 
@@ -92,8 +91,6 @@ class ResNetClassifier(nn.Module):
         resnet_model.bn1 = nn.BatchNorm2d(64)
 
         print(resnet_model)
-        if dropout_rate > 0:
-            append_dropout(resnet_model, rate=dropout_rate)
         self.model = resnet_model
         print(self.model)
     
@@ -126,13 +123,4 @@ class ResNetClassifier(nn.Module):
     @torch.inference_mode()
     def get_representations(self, dataloader, device):
         pass
-    
-
-def append_dropout(model, rate=0.1):
-        for name, module in model.named_children():
-            if len(list(module.children())) > 0:
-                append_dropout(module, rate)
-            if isinstance(module, nn.ReLU):
-                new = nn.Sequential(module, nn.Dropout2d(p=rate, inplace=True))
-                setattr(model, name, new)
     
