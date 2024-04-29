@@ -3,6 +3,7 @@ from typing import List, Literal, Tuple
 import torch
 import torch.nn as nn
 import torchvision
+import birdset.modules.models.resnet_dropout
 
 ResNetVersion = Literal["resnet18", "resnet34", "resnet50", "resnet101", "resnet152"]
 
@@ -56,28 +57,14 @@ class ResNetClassifier(nn.Module):
 
         # Available resnet versions
         resnet_versions = {
-            "resnet18": torchvision.models.resnet18,
-            "resnet34": torchvision.models.resnet34,
-            "resnet50": torchvision.models.resnet50,
-            "resnet101": torchvision.models.resnet101,
-            "resnet152": torchvision.models.resnet152,
+            "resnet18": birdset.modules.models.resnet_dropout.resnet18,
+            "resnet34": birdset.modules.models.resnet_dropout.resnet34,
+            "resnet50": birdset.modules.models.resnet_dropout.resnet50,
+            "resnet101": birdset.modules.models.resnet_dropout.resnet101,
+            "resnet152": birdset.modules.models.resnet_dropout.resnet152,
         }
 
-        # Using the resnet backbone
-        # TODO: Customize this to read pre-trained weights from a specified directory
-        if pretrained:
-            resnet_weights = {
-                "resnet18": torchvision.models.ResNet18_Weights.DEFAULT,
-                "resnet34": torchvision.models.ResNet34_Weights.DEFAULT,
-                "resnet50": torchvision.models.ResNet50_Weights.DEFAULT,
-                "resnet101": torchvision.models.ResNet101_Weights.DEFAULT,
-                "resnet152": torchvision.models.ResNet152_Weights.DEFAULT,
-            }
-            weights = resnet_weights[baseline_architecture]
-        else:
-            weights = None
-
-        resnet_model = resnet_versions[baseline_architecture](weights=weights)
+        resnet_model = resnet_versions[baseline_architecture](pretrained=pretrained)
 
         # Replace the old FC layer with Identity, so we can train our own
         linear_size = list(resnet_model.children())[-1].in_features

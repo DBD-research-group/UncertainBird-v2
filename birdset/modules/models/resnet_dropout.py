@@ -2,7 +2,10 @@
 # https://github.com/pytorch/vision/blob/61763fa955ef74077a1d3e1aa5da36f7c606943a/torchvision/models/resnet.py#L197-L213
 import torch
 import torch.nn as nn
-from .utils import load_state_dict_from_url
+try:
+    from torch.hub import load_state_dict_from_url
+except ImportError:
+    from torch.utils.model_zoo import load_url as load_state_dict_from_url
 
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
