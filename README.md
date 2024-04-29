@@ -95,8 +95,8 @@ min_epochs = 1
 max_epochs = 5
 trainer = Trainer(min_epochs=min_epochs, max_epochs=max_epochs, accelerator="gpu", devices=1)
 
-from birdset.modules.base_module import BaseModule
-model = BaseModule(
+from birdset.modules.multilabel_module import MultilabelModule
+model = MultilabelModule(
     len_trainset=dm.len_trainset,
     task=dm.task,
     batch_size=dm.train_batch_size,
@@ -121,12 +121,12 @@ To enhance model performance we mix in additional background noise from download
 Our experiments are defined in the `configs/experiment` folder. To run an experiment, use the following command in the directory of the repository:
 
 ``` bash
-python src/main.py experiment="EXPERIMENT_PATH"
+python birdset/train.py experiment="EXPERIMENT_PATH"
 ```
 Replace `EXPERIMENT_PATH` with the path to the disired experiment YAML config originating from the `experiment` directory. For example, here's a command for training an EfficientNet on HSN: 
 
 ``` bash
-python src/main.py experiment="local/HSN/efficientnet.yaml"
+python birdset/train.py experiment="local/HSN/efficientnet.yaml"
 ```
 
 
