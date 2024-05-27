@@ -33,7 +33,7 @@ module:
     _target_: torch.nn.BCEWithLogitsLoss 
   #_target_: src.modules.losses.focal_loss.MultiLabelFocalLoss
   network: 
-    torch_compile: True
+    torch_compile: True  
 
 trainer:
   min_epochs: 1
