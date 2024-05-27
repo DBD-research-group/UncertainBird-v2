@@ -1,8 +1,9 @@
-from typing import List, Literal, Tuple
+from typing import Dict, List, Literal, Tuple
 
 import torch
 import torch.nn as nn
 import torchvision
+from typing import Optional
 import birdset.modules.models.resnet_dropout
 
 ResNetVersion = Literal["resnet18", "resnet34", "resnet50", "resnet101", "resnet152"]
@@ -27,13 +28,13 @@ class ResNetClassifier(nn.Module):
     forward(x):
         Performs a forward pass through the network.
     """
-
     def __init__(
-            self,
-            baseline_architecture: ResNetVersion,
-            num_classes: int,
-            num_channels: int = 1,
-            pretrained: bool = False):
+        self,
+        baseline_architecture: ResNetVersion,
+        num_classes: int,
+        num_channels: int = 1,
+        pretrained: bool = False,
+        pretrain_info: Optional[Dict] = None):
         """
         Constructs all the necessary attributes for the ResNetClassifier object.
 

@@ -22,6 +22,8 @@ logger:
     tags: ${tags}
     group: "XCM_train_resnet"
     mode: online
+  _target_: birdset.modules.multilabel_module.MultilabelModule
+  #label_counts: ...  # Remove this line
 
 module:
   optimizer:
@@ -34,6 +36,7 @@ module:
   #_target_: src.modules.losses.focal_loss.MultiLabelFocalLoss
   network: 
     torch_compile: True  
+  
 
 trainer:
   min_epochs: 1

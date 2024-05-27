@@ -35,7 +35,8 @@ class MultilabelModule(BaseModule):
             task: Literal['multiclass', 'multilabel'] = "multilabel",
             num_gpus: int = 1,
             prediction_table: bool = False,
-            pretrain_info = None
+            pretrain_info = None,
+            label_counts = None
             ):
     
         self.prediction_table = prediction_table
