@@ -1,8 +1,10 @@
-from typing import List, Literal, Tuple
+from typing import Dict, List, Literal, Tuple
 
 import torch
 import torch.nn as nn
 import torchvision
+from typing import Optional
+import birdset.modules.models.resnet_dropout
 
 ResNetVersion = Literal["resnet18", "resnet34", "resnet50", "resnet101", "resnet152"]
 
@@ -26,13 +28,13 @@ class ResNetClassifier(nn.Module):
     forward(x):
         Performs a forward pass through the network.
     """
-
     def __init__(
-            self,
-            baseline_architecture: ResNetVersion,
-            num_classes: int,
-            num_channels: int = 1,
-            pretrained: bool = False,):
+        self,
+        baseline_architecture: ResNetVersion,
+        num_classes: int,
+        num_channels: int = 1,
+        pretrained: bool = False,
+        pretrain_info: Optional[Dict] = None):
         """
         Constructs all the necessary attributes for the ResNetClassifier object.
 
@@ -46,6 +48,8 @@ class ResNetClassifier(nn.Module):
                 The number of input channels in the images, by default 1.
             pretrained : bool, optional
                 Whether to use a pretrained model, by default False.
+            dropout_rate : float, optional
+                The dropout rate, by default 0 (deactivated).
         """
         super(ResNetClassifier, self).__init__()
         self.baseline_architecture = baseline_architecture
@@ -54,28 +58,14 @@ class ResNetClassifier(nn.Module):
 
         # Available resnet versions
         resnet_versions = {
-            "resnet18": torchvision.models.resnet18,
-            "resnet34": torchvision.models.resnet34,
-            "resnet50": torchvision.models.resnet50,
-            "resnet101": torchvision.models.resnet101,
-            "resnet152": torchvision.models.resnet152,
+            "resnet18": birdset.modules.models.resnet_dropout.resnet18,
+            "resnet34": birdset.modules.models.resnet_dropout.resnet34,
+            "resnet50": birdset.modules.models.resnet_dropout.resnet50,
+            "resnet101": birdset.modules.models.resnet_dropout.resnet101,
+            "resnet152": birdset.modules.models.resnet_dropout.resnet152,
         }
 
-        # Using the resnet backbone
-        # TODO: Customize this to read pre-trained weights from a specified directory
-        if pretrained:
-            resnet_weights = {
-                "resnet18": torchvision.models.ResNet18_Weights.DEFAULT,
-                "resnet34": torchvision.models.ResNet34_Weights.DEFAULT,
-                "resnet50": torchvision.models.ResNet50_Weights.DEFAULT,
-                "resnet101": torchvision.models.ResNet101_Weights.DEFAULT,
-                "resnet152": torchvision.models.ResNet152_Weights.DEFAULT,
-            }
-            weights = resnet_weights[baseline_architecture]
-        else:
-            weights = None
-
-        resnet_model = resnet_versions[baseline_architecture](weights=weights)
+        resnet_model = resnet_versions[baseline_architecture](pretrained=pretrained)
 
         # Replace the old FC layer with Identity, so we can train our own
         linear_size = list(resnet_model.children())[-1].in_features
@@ -88,13 +78,16 @@ class ResNetClassifier(nn.Module):
         )
         resnet_model.bn1 = nn.BatchNorm2d(64)
 
+        print(resnet_model)
         self.model = resnet_model
+        print(self.model)
+    
     def forward(self, input_values: torch.Tensor, **kwargs):
         """
         Performs a forward pass through the network.
 
         Parameters
-        ----------
+        -------
         input_values : torch.Tensor
             The input tensor to the network.
         kwargs : dict, optional

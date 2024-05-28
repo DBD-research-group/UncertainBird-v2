@@ -69,7 +69,7 @@ def eval(cfg):
 
     log.info("Logging Hyperparams")
     utils.log_hyperparameters(object_dict)
-
+    test_metrics = {}
     if cfg.get("test"):
         log.info("Starting Testing")
         trainer.test(
