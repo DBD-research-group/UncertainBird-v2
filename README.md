@@ -1,39 +1,80 @@
-# BirdSet 
 
 [![python](https://img.shields.io/badge/-Python_3.10-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>
 <a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
 <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
 <a href="https://github.com/DBD-research-group/BirdSet"><img alt="GitHub: github.com/DBD-research-group/BirdSet " src="https://img.shields.io/badge/-BirdSet-017F2F?style=flat&logo=github&labelColor=gray"></a>
-[![arXiv](https://img.shields.io/badge/arXiv-1234.56789-b31b1b.svg)](https://arxiv.org/abs/2403.10380)
+<!-- [![arXiv](https://img.shields.io/badge/arXiv-1234.56789-b31b1b.svg)](https://arxiv.org/abs/2403.10380) -->
 
-![logo](https://github.com/DBD-research-group/BirdSet/blob/main/resources/perch/birdsetsymbol.png)
+# UncertainBird
 
-## Get Started
 
-### Install dependencies
+This project addresses the challenge of uncertainty estimation in AI-drivenbird sound classification, essential for the ”DeepBirdDetect” project aimed at harmonizing wind power expansion with avian conservation. We aim to evaluate methods such as Monte Carlo Dropout, Spectral-normalized Neural GaussianProcess, and Focal Loss within deep learning frameworks, assessing their performance across various neural network architectures, including CNNs and Trans-formers, and model scales. Our findings will provide insights into the suitability of these uncertainty estimation techniques for environmental conservation applications, offering a basis for more reliable and transparent AI-based wildlife monitoring.
 
-Either with [conda](https://docs.conda.io/en/latest/) and [pip](https://pip.pypa.io/en/stable/).
-```
-conda create -n birdset python=3.10
-pip install -e .
-```
+## User Installation
 
-### Devcontainer
+The simplest way to install $\texttt{UncertainBird}$ is to clone this repository.
 
-You can use the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) configured as as git submodule:
+You can also use the [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) configured as as git submodule:
 ```bash
 git submodule update --init --recursive
 ```
 
-Or [poetry](https://python-poetry.org/).
+And install python dependencies with [poetry](https://python-poetry.org/).
 ```
 poetry install
 poetry shell
 ```
 
+## Run experiments
 
-# Minimal Working Example
+Our experiments are defined in the `configs/experiment/uncertainbird` folder. To run an experiment, use the following command in the directory of the repository:
+
+``` bash
+python birdset/train.py experiment=uncertainbird/Ye_et_al./resnet_esc50
+```
+
+## Reproduce Neurips2024 Baselines
+
+First, you have to download the background noise files for augmentations
+
+``` bash
+python resources/utils/download_background_noise.py
+```
+
+We provide all experiment YAML files used to generate our results in the path `birdset/configs/experiment/birdset_neurips24`. For each dataset, we specify the parameters for all training scenario: `DT`, `MT`, and `LT`
+
+### Dedicated Training (DT)
+
+The experiments for `DT` with the dedicated subset can be easily run with a single line: 
+
+``` bash
+python birdset/train.py experiment="birdset_neurips24/DT/$Model"
+```
+
+### Medium Training (MT) and Large Training (LT)
+Experiments for training scenarios `MT` and `LT` are harder to reproduce since they require more extensive training times. 
+Additionally, the datasets are quite large (90GB for XCM and 480GB for XCL). Therefore, we provide the best model checkpoints via Hugging Face in the experiment files to avoid the need for retraining. These checkpoints can be executed by running the evaluation script, which will automatically download the model and perform inference on the test datasets:
+
+``` bash
+python birdset/eval.py experiment="birdset_neurips24/$EXPERIMENT_PATH"
+```
+
+As the model EAT is not implemented in Hugging Face transformer (yet), the checkpoints are available to download from the tracked experiments on [Weights and Biases LT_XCL_eat](https://wandb.ai/deepbirddetect/birdset/runs/pretrain_eat_3_2024-05-17_075334/files?nw=nwuserraphaelschwinger).
+
+If you want to start the large-scale trainings and download the big training datasets, you can also employ the `XCM` and `XCL` trainings via the experiment YAML files. 
+
+``` bash
+python birdset/train.py experiment="birdset_neurips24/$EXPERIMENT_PATH"
+```
+After training, the best model checkpoint is saved based on the validation loss and can then be used for inference:
+
+``` bash
+python birdset/eval.py experiment="birdset_neurips24/$EXPERIMENT_PATH" module.model.network.local_checkpoint="$CHECKPOINT_PATH"
+```
+
+
+## Example
 
 <!-- ## Log in to Huggingface
 
@@ -103,12 +144,12 @@ model = MultilabelModule(
 
 trainer.fit(model, dm)
 ```
-
+<!---
 ## Results (AUROC)
 | <sub>Title</sub> | <sub>Notes</sub> |<sub>PER</sub> | <sub>NES</sub> | <sub>UHH</sub> | <sub>HSN</sub> | <sub>NBP</sub> | <sub>POW</sub> | <sub>SSW</sub> | <sub>SNE</sub>  | <sub>Overall</sub> | <sub>Code</sub> |
 | :----| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | <sub>**BirdSet: A Multi-Task Benchmark For Classification In Avian Bioacoustics**</sub> | | | | | | | |
-| <sub>**BIRB: A Generalization Benchmark for Information Retrieval in Bioacoustics**</sub> | | | | | | | |  | | | |
+| <sub>**BIRB: A Generalization Benchmark for Information Retrieval in Bioacoustics**</sub> | | | | | | | |  | | | |-->
 ## Logging
 Logs will be written to [Weights&Biases](https://wandb.ai/) by default.
 
