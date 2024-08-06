@@ -2,7 +2,7 @@ from typing import Literal
 from birdset import utils
 
 import numpy as np
-from omegaconf import DictConfig
+from omegaconf import DictConfig, ListConfig
 from birdset.datamodule.components.feature_extraction import DefaultFeatureExtractor
 from birdset.datamodule.components.event_decoding import EventDecoding
 from birdset.datamodule.components.augmentations import NoCallMixer, PowerToDB
@@ -279,7 +279,7 @@ class BirdSetTransformsWrapper(BaseTransforms):
         if self.model_type == "vision" and self.preprocessing.spectrogram_conversion is not None:
 
             # check if spectrogram conversion is a list
-            if isinstance(self.preprocessing.spectrogram_conversion, list):
+            if isinstance(self.preprocessing.spectrogram_conversion, list) or isinstance(self.preprocessing.spectrogram_conversion, ListConfig) :
                 spectrograms_channels = []
                 # it is a list so we create a new spectrogram for each entry in the list which will be than provided as different channels for each entry
                 for channel in range(len(self.preprocessing.spectrogram_conversion)):
